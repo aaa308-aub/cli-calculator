@@ -46,11 +46,13 @@ class Calculator:
         if subExpression != (0, len(tokens)-1):
             tokens[start-1] = tokens[end+1] = None  #remove the parentheses using placeholder None.
 
-        if tokens[start] in ['+','-']: #handle leading + or - explicitly at the start.
-            sign = tokens[start]
+        if tokens[start] == '+': #handle leading + or - explicitly at the start.
+            tokens[start] = None
+            start += 1
+        elif tokens[start] == '-':
             tokens[start] = None
             while tokens[start] is None: start += 1
-            tokens[start] = Decimal(sign + str(tokens[start]))
+            tokens[start] = -Decimal(tokens[start]) if type(tokens[start]) == str else -tokens[start]
             start += 1
 
         for index in range(start, end+1): #first pass: evaluate the terms (*, /), left to right.
